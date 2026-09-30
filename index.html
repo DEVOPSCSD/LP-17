@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OneClick DevOps</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+
+        <div class="logo">
+            <div class="logo-icon">⚡</div>
+            <div>
+                <h2>OneClick</h2>
+                <span>DevOps</span>
+            </div>
+        </div>
+
+        <nav>
+
+            <button class="nav-btn active" onclick="showSection('dashboard', this)">
+                🏠 Dashboard
+            </button>
+
+            <button class="nav-btn" onclick="showSection('projects', this)">
+                📁 Projects
+            </button>
+
+            <button class="nav-btn" onclick="showSection('provision', this)">
+                ☁️ Provision
+            </button>
+
+            <button class="nav-btn" onclick="showSection('deployments', this)">
+                🚀 Deployments
+            </button>
+
+            <button class="nav-btn" onclick="showSection('logs', this)">
+                📋 Logs
+            </button>
+
+            <button class="nav-btn" onclick="showSection('settings', this)">
+                ⚙️ Settings
+            </button>
+
+        </nav>
+
+        <div class="sidebar-bottom">
+            <p>OneClick DevOps</p>
+            <small>Environment Automation</small>
+        </div>
+
+    </aside>
+
+
+    <!-- Main Content -->
+    <main class="main">
+
+        <!-- Header -->
+        <header class="header">
+
+            <div>
+                <h1 id="pageTitle">Dashboard</h1>
+                <p>Environment Provisioning & Deployment System</p>
+            </div>
+
+            <div class="user">
+                <div class="user-icon">👤</div>
+                <span>Admin</span>
+            </div>
+
+        </header>
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section id="dashboard" class="section active">
+
+            <div class="welcome">
+                <div>
+                    <h2>Welcome to OneClick DevOps 🚀</h2>
+                    <p>
+                        Provision environments and deploy applications
+                        from one centralized dashboard.
+                    </p>
+                </div>
+
+                <button class="primary-btn"
+                        onclick="showSection('provision')">
+                    + Provision Environment
+                </button>
+            </div>
+
+
+            <!-- Statistics -->
+
+            <div class="stats">
+
+                <div class="stat-card">
+                    <div class="stat-icon blue">📁</div>
+                    <div>
+                        <h3 id="projectCount">3</h3>
+                        <p>Projects</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon green">☁️</div>
+                    <div>
+                        <h3 id="environmentCount">2</h3>
+                        <p>Environments</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon purple">🚀</div>
+                    <div>
+                        <h3 id="deploymentCount">5</h3>
+                        <p>Deployments</p>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon orange">✓</div>
+                    <div>
+                        <h3>100%</h3>
+                        <p>Success Rate</p>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Recent Activity -->
+
+            <div class="grid">
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h2>Recent Deployments</h2>
+                        <button onclick="showSection('deployments')">
+                            View All
+                        </button>
+                    </div>
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Project</th>
+                                <th>Environment</th>
+                                <th>Status</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="deploymentTable">
+
+                            <tr>
+                                <td>Web Application</td>
+                                <td>Production</td>
+                                <td>
+                                    <span class="status success">
+                                        Success
+                                    </span>
+                                </td>
+                                <td>10 min ago</td>
+                            </tr>
+
+                            <tr>
+                                <td>Payment API</td>
+                                <td>Staging</td>
+                                <td>
+                                    <span class="status success">
+                                        Success
+                                    </span>
+                                </td>
+                                <td>30 min ago</td>
+                            </tr>
+
+                            <tr>
+                                <td>Mobile API</td>
+                                <td>Development</td>
+                                <td>
+                                    <span class="status running">
+                                        Running
+                                    </span>
+                                </td>
+                                <td>1 hour ago</td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+                <div class="card">
+
+                    <div class="card-header">
+                        <h2>System Status</h2>
+                    </div>
+
+                    <div class="system-status">
+
+                        <div>
+                            <span>Jenkins</span>
+                            <strong class="online">● Online</strong>
+                        </div>
+
+                        <div>
+                            <span>Docker</span>
+                            <strong class="online">● Online</strong>
+                        </div>
+
+                        <div>
+                            <span>GitHub</span>
+                            <strong class="online">● Connected</strong>
+                        </div>
+
+                        <div>
+                            <span>Terraform</span>
+                            <strong class="online">● Ready</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PROJECTS ================= -->
+
+        <section id="projects" class="section">
+
+            <div class="section-title">
+                <div>
+                    <h2>Projects</h2>
+                    <p>Manage your application projects.</p>
+                </div>
+
+                <button class="primary-btn" onclick="addProject()">
+                    + Add Project
+                </button>
+            </div>
+
+
+            <div class="project-grid" id="projectGrid">
+
+                <div class="project-card">
+
+                    <div class="project-top">
+                        <div class="project-icon">🌐</div>
+
+                        <span class="status success">
+                            Active
+                        </span>
+                    </div>
+
+                    <h3>Web Application</h3>
+
+                    <p>
+                        React frontend application with Node.js backend.
+                    </p>
+
+                    <div class="project-info">
+                        <span>🔗 GitHub</span>
+                        <span>🐳 Docker</span>
+                    </div>
+
+                    <button class="secondary-btn"
+                            onclick="deployProject('Web Application')">
+                        🚀 Deploy
+                    </button>
+
+                </div>
+
+
+                <div class="project-card">
+
+                    <div class="project-top">
+                        <div class="project-icon">💳</div>
+
+                        <span class="status success">
+                            Active
+                        </span>
+                    </div>
+
+                    <h3>Payment API</h3>
+
+                    <p>
+                        REST API service for payment processing.
+                    </p>
+
+                    <div class="project-info">
+                        <span>🔗 GitHub</span>
+                        <span>🐳 Docker</span>
+                    </div>
+
+                    <button class="secondary-btn"
+                            onclick="deployProject('Payment API')">
+                        🚀 Deploy
+                    </button>
+
+                </div>
+
+
+                <div class="project-card">
+
+                    <div class="project-top">
+                        <div class="project-icon">📱</div>
+
+                        <span class="status success">
+                            Active
+                        </span>
+                    </div>
+
+                    <h3>Mobile API</h3>
+
+                    <p>
+                        Backend API for mobile applications.
+                    </p>
+
+                    <div class="project-info">
+                        <span>🔗 GitHub</span>
+                        <span>🐳 Docker</span>
+                    </div>
+
+                    <button class="secondary-btn"
+                            onclick="deployProject('Mobile API')">
+                        🚀 Deploy
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= PROVISION ================= -->
+
+        <section id="provision" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Provision Environment</h2>
+                    <p>
+                        Create a new development environment.
+                    </p>
+                </div>
+
+            </div>
+
+
+            <div class="card form-card">
+
+                <form id="provisionForm">
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Project Name</label>
+
+                            <select id="projectName">
+
+                                <option>Web Application</option>
+                                <option>Payment API</option>
+                                <option>Mobile API</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Environment</label>
+
+                            <select id="environment">
+
+                                <option>Development</option>
+                                <option>Testing</option>
+                                <option>Staging</option>
+                                <option>Production</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Cloud Provider</label>
+
+                            <select id="cloud">
+
+                                <option>AWS</option>
+                                <option>Azure</option>
+                                <option>Google Cloud</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Region</label>
+
+                            <select>
+
+                                <option>India - Hyderabad</option>
+                                <option>India - Mumbai</option>
+                                <option>US East</option>
+                                <option>Europe</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Instance Type</label>
+
+                            <select>
+
+                                <option>Small</option>
+                                <option>Medium</option>
+                                <option>Large</option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>Docker</label>
+
+                            <select>
+
+                                <option>Enabled</option>
+                                <option>Disabled</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>Environment Description</label>
+
+                        <textarea
+                            placeholder="Enter environment description..."
+                        ></textarea>
+
+                    </div>
+
+
+                    <button type="submit" class="primary-btn">
+                        ⚡ Provision Environment
+                    </button>
+
+                </form>
+
+
+                <!-- Provision status -->
+
+                <div id="provisionStatus" class="provision-status hidden">
+
+                    <div class="loader"></div>
+
+                    <div>
+                        <h3 id="provisionTitle">
+                            Provisioning Environment...
+                        </h3>
+
+                        <p id="provisionMessage">
+                            Creating infrastructure. Please wait.
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= DEPLOYMENTS ================= -->
+
+        <section id="deployments" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Deployments</h2>
+                    <p>View and manage application deployments.</p>
+                </div>
+
+                <button class="primary-btn"
+                        onclick="deployProject('Web Application')">
+                    🚀 New Deployment
+                </button>
+
+            </div>
+
+
+            <div class="card">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+                            <th>ID</th>
+                            <th>Project</th>
+                            <th>Environment</th>
+                            <th>Version</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody id="allDeployments">
+
+                        <tr>
+                            <td>#DEP-001</td>
+                            <td>Web Application</td>
+                            <td>Production</td>
+                            <td>v1.4.2</td>
+
+                            <td>
+                                <span class="status success">
+                                    Success
+                                </span>
+                            </td>
+
+                            <td>
+                                <button class="small-btn"
+                                        onclick="viewLogs()">
+                                    Logs
+                                </button>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>#DEP-002</td>
+                            <td>Payment API</td>
+                            <td>Staging</td>
+                            <td>v2.1.0</td>
+
+                            <td>
+                                <span class="status success">
+                                    Success
+                                </span>
+                            </td>
+
+                            <td>
+                                <button class="small-btn"
+                                        onclick="viewLogs()">
+                                    Logs
+                                </button>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>#DEP-003</td>
+                            <td>Mobile API</td>
+                            <td>Development</td>
+                            <td>v1.8.0</td>
+
+                            <td>
+                                <span class="status running">
+                                    Running
+                                </span>
+                            </td>
+
+                            <td>
+                                <button class="small-btn"
+                                        onclick="viewLogs()">
+                                    Logs
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= LOGS ================= -->
+
+        <section id="logs" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Deployment Logs</h2>
+                    <p>Monitor provisioning and deployment activity.</p>
+                </div>
+
+                <button class="secondary-btn"
+                        onclick="clearLogs()">
+                    Clear Logs
+                </button>
+
+            </div>
+
+
+            <div class="terminal" id="terminal">
+
+                <div class="terminal-header">
+
+                    <span>● ● ●</span>
+
+                    <span>oneclick-devops-terminal</span>
+
+                </div>
+
+
+                <div class="terminal-body">
+
+                    <p>
+                        <span class="green-text">$</span>
+                        OneClick DevOps System Started
+                    </p>
+
+                    <p>
+                        <span class="green-text">$</span>
+                        Checking Jenkins connection...
+                    </p>
+
+                    <p class="success-text">
+                        ✓ Jenkins connected successfully
+                    </p>
+
+                    <p>
+                        <span class="green-text">$</span>
+                        Checking Docker...
+                    </p>
+
+                    <p class="success-text">
+                        ✓ Docker service is running
+                    </p>
+
+                    <p>
+                        <span class="green-text">$</span>
+                        System ready for deployment.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ================= SETTINGS ================= -->
+
+        <section id="settings" class="section">
+
+            <div class="section-title">
+
+                <div>
+                    <h2>Settings</h2>
+                    <p>Configure your DevOps environment.</p>
+                </div>
+
+            </div>
+
+
+            <div class="card settings-card">
+
+                <div class="setting">
+
+                    <div>
+                        <h3>GitHub Integration</h3>
+                        <p>Connect your GitHub repositories.</p>
+                    </div>
+
+                    <span class="status success">
+                        Connected
+                    </span>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <div>
+                        <h3>Jenkins</h3>
+                        <p>Continuous Integration server.</p>
+                    </div>
+
+                    <span class="status success">
+                        Connected
+                    </span>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <div>
+                        <h3>Docker</h3>
+                        <p>Container platform.</p>
+                    </div>
+
+                    <span class="status success">
+                        Running
+                    </span>
+
+                </div>
+
+
+                <div class="setting">
+
+                    <div>
+                        <h3>Terraform</h3>
+                        <p>Infrastructure provisioning tool.</p>
+                    </div>
+
+                    <span class="status success">
+                        Ready
+                    </span>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+    </main>
+
+
+    <script src="script.js"></script>
+
+</body>
+</html>
