@@ -57,12 +57,10 @@ function showSection(sectionId, button) {
 /* =========================================
    PROVISION ENVIRONMENT
 ========================================= */
-
 document.getElementById("provisionForm")
-    .addEventListener("submit", function(event) {
+    .addEventListener("submit", async function(event) {
 
         event.preventDefault();
-
 
         const project =
             document.getElementById("projectName").value;
@@ -73,6 +71,17 @@ document.getElementById("provisionForm")
         const cloud =
             document.getElementById("cloud").value;
 
+        const region =
+            document.getElementById("region").value;
+
+        const instanceType =
+            document.getElementById("instanceType").value;
+
+        const docker =
+            document.getElementById("docker").value;
+
+        const description =
+            document.getElementById("environmentDescription").value;
 
         const status =
             document.getElementById("provisionStatus");
@@ -82,7 +91,6 @@ document.getElementById("provisionForm")
 
         const message =
             document.getElementById("provisionMessage");
-
 
         // Show status
         status.classList.remove("hidden");
@@ -97,16 +105,40 @@ document.getElementById("provisionForm")
             cloud +
             "...";
 
-
         // Add log
         addLog(
             "Starting environment provisioning for " +
             project
         );
 
+        try {
 
-        // Simulate provisioning
-        setTimeout(function() {
+            const response = await fetch(
+    "http://127.0.0.1:5000/api/projects",
+    {
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        name: project,
+                        environment: environment,
+                        cloud: cloud,
+                        region: region,
+                        instance_type: instanceType,
+                        docker_enabled: docker === "Enabled" ? 1 : 0,
+                        description: description
+                    })
+                }
+            );
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Provisioning failed");
+            }
 
             title.innerText =
                 "Environment Created Successfully ✓";
@@ -115,14 +147,12 @@ document.getElementById("provisionForm")
                 project +
                 " - " +
                 environment +
-                " environment is now running.";
+                " environment has been saved.";
 
-
-            // Add log
             addLog(
-                "Environment provisioned successfully."
+                "Environment provisioned successfully. Project ID: " +
+                result.project_id
             );
-
 
             // Update environment count
             let count =
@@ -136,9 +166,19 @@ document.getElementById("provisionForm")
                 "environmentCount"
             ).innerText = count + 1;
 
+        } catch (error) {
 
-        }, 3000);
+            title.innerText =
+                "Provisioning Failed ✗";
 
+            message.innerText =
+                error.message;
+
+            addLog(
+                "Provisioning failed: " +
+                error.message
+            );
+        }
     });
 
 
@@ -317,99 +357,132 @@ function clearLogs() {
     `;
 }
 
-
 /* =========================================
    ADD PROJECT
 ========================================= */
 
-function addProject() {
+async function addProject() {
 
-    const name =
-        prompt("Enter project name:");
+    const name = prompt("Enter project name:");
 
     if (!name) {
         return;
     }
 
+    try {
 
-    const projectGrid =
-        document.getElementById(
-            "projectGrid"
+        // Save project to Flask backend
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/projects",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    name: name,
+                    environment: "Development",
+                    cloud: "AWS",
+                    region: "India - Hyderabad",
+                    instance_type: "Small",
+                    docker_enabled: 1,
+                    description: "New application project created using OneClick DevOps."
+                })
+            }
         );
 
+        const result = await response.json();
 
-    const card =
-        document.createElement("div");
+        if (!response.ok) {
+            throw new Error(
+                result.message || "Failed to create project"
+            );
+        }
 
+        // Add project card to frontend
+        const projectGrid =
+            document.getElementById("projectGrid");
 
-    card.className =
-        "project-card";
+        const card =
+            document.createElement("div");
 
+        card.className =
+            "project-card";
 
-    card.innerHTML = `
+        card.innerHTML = `
+            <div class="project-top">
 
-        <div class="project-top">
+                <div class="project-icon">
+                    📦
+                </div>
 
-            <div class="project-icon">
-                📦
+                <span class="status success">
+                    Active
+                </span>
+
             </div>
 
-            <span class="status success">
-                Active
-            </span>
+            <h3>${name}</h3>
 
-        </div>
+            <p>
+                New application project created
+                using OneClick DevOps.
+            </p>
 
-        <h3>${name}</h3>
+            <div class="project-info">
+                <span>🔗 GitHub</span>
+                <span>🐳 Docker</span>
+            </div>
 
-        <p>
-            New application project created
-            using OneClick DevOps.
-        </p>
+            <button class="secondary-btn"
+                    onclick="deployProject('${name}')">
 
-        <div class="project-info">
+                🚀 Deploy
 
-            <span>🔗 GitHub</span>
+            </button>
+        `;
 
-            <span>🐳 Docker</span>
+        projectGrid.appendChild(card);
 
-        </div>
+        // Update project count
+        let count =
+            parseInt(
+                document.getElementById(
+                    "projectCount"
+                ).innerText
+            );
 
-        <button class="secondary-btn"
-                onclick="deployProject('${name}')">
+        document.getElementById(
+            "projectCount"
+        ).innerText = count + 1;
 
-            🚀 Deploy
-
-        </button>
-    `;
-
-
-    projectGrid.appendChild(card);
-
-
-    // Update project count
-    let count =
-        parseInt(
-            document.getElementById(
-                "projectCount"
-            ).innerText
+        // Add log
+        addLog(
+            "Project '" +
+            name +
+            "' created successfully. Project ID: " +
+            result.project_id
         );
 
+        alert(
+            "Project created successfully!"
+        );
 
-    document.getElementById(
-        "projectCount"
-    ).innerText = count + 1;
+    } catch (error) {
 
+        console.error(error);
 
-    addLog(
-        "Project '" +
-        name +
-        "' created."
-    );
+        addLog(
+            "Project creation failed: " +
+            error.message
+        );
 
+        alert(
+            "Project creation failed: " +
+            error.message
+        );
+    }
 }
-
-
 /* =========================================
    PAGE LOAD
 ========================================= */
@@ -422,5 +495,95 @@ document.addEventListener(
             "OneClick DevOps dashboard loaded."
         );
 
+        loadProjects();
+
     }
 );
+/* =========================================
+   LOAD PROJECTS FROM DATABASE
+========================================= */
+
+async function loadProjects() {
+
+    try {
+
+        const response = await fetch(
+            "http://127.0.0.1:5000/api/projects"
+        );
+
+        const projects = await response.json();
+
+        if (!response.ok) {
+            throw new Error("Failed to load projects");
+        }
+
+        const projectGrid =
+            document.getElementById("projectGrid");
+
+        projectGrid.innerHTML = "";
+
+        projects.forEach(function(project) {
+
+            const card =
+                document.createElement("div");
+
+            card.className = "project-card";
+
+            card.innerHTML = `
+                <div class="project-top">
+
+                    <div class="project-icon">
+                        📦
+                    </div>
+
+                    <span class="status success">
+                        Active
+                    </span>
+
+                </div>
+
+                <h3>${project.name}</h3>
+
+                <p>
+                    ${project.description ||
+                    "Application project created using OneClick DevOps."}
+                </p>
+
+                <div class="project-info">
+                    <span>☁️ ${project.cloud}</span>
+                    <span>🐳 Docker</span>
+                </div>
+
+                <button class="secondary-btn"
+                        onclick="deployProject('${project.name}')">
+
+                    🚀 Deploy
+
+                </button>
+            `;
+
+            projectGrid.appendChild(card);
+        });
+
+        document.getElementById(
+            "projectCount"
+        ).innerText = projects.length;
+
+        addLog(
+            projects.length +
+            " project(s) loaded from database."
+        );
+
+    } catch (error) {
+
+        console.error(
+            "Error loading projects:",
+            error
+        );
+
+        addLog(
+            "Failed to load projects: " +
+            error.message
+        );
+    }
+}
