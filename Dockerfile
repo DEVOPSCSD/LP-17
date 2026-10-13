@@ -1,14 +1,45 @@
-# Production-appropriate Nginx Alpine image for serving static frontend
-FROM nginx:alpine
+# =============================================
+# ONECLICK DEVOPS - PRODUCTION DOCKERFILE
+# Node.js 18 Alpine Lightweight Runtime
+# =============================================
 
-# Remove default Nginx static assets
-RUN rm -rf /usr/share/nginx/html/*
+FROM node:18-alpine
 
-# Copy application static files to Nginx web root
-COPY index.html style.css script.js /usr/share/nginx/html/
+# Set working directory
+WORKDIR /app
 
-# Expose HTTP port 80
-EXPOSE 80
+# Configure production environment variables
+ENV NODE_ENV=production
+ENV PORT=3000
+ENV DB_PATH=/app/data/oneclick.sqlite
 
-# Run Nginx in foreground
-CMD ["nginx", "-g", "daemon off;"]
+# Create directory for persistent volume mounts and set permissions
+RUN mkdir -p /app/data && chown -R node:node /app
+
+# Install dependencies using package manifests
+COPY package*.json ./
+RUN npm install --omit=dev --no-audit --no-fund
+
+# Copy backend source modules and frontend assets
+COPY server.js ./
+COPY src/ ./src/
+COPY index.html style.css script.js ./
+
+# Set ownership to unprivileged user
+RUN chown -R node:node /app
+
+# Switch to unprivileged non-root user
+USER node
+
+# Expose internal HTTP service port
+EXPOSE 3000
+
+# Declare persistent data volume mount point
+VOLUME ["/app/data"]
+
+# Container Healthcheck probe
+HEALTHCHECK --interval=20s --timeout=5s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+
+# Start the application server
+CMD ["node", "server.js"]
